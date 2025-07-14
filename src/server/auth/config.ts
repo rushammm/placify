@@ -114,8 +114,8 @@ export const authConfig = {
       clientSecret: env.AUTH_DISCORD_SECRET,
     }),
     GitHubProvider({
-      clientId: env.AUTH_GITHUB_ID as string,
-      clientSecret: env.AUTH_GITHUB_SECRET as string,
+      clientId: env.AUTH_GITHUB_ID,
+      clientSecret: env.AUTH_GITHUB_SECRET,
     }),
   ],
   adapter: DrizzleAdapter(db, {

@@ -90,11 +90,11 @@ export function OnboardingForm({ userId }: { userId: string }) {
   if (step === 1) {
     return (
       <div>
-        <h2 className="text-xl font-semibold mb-4">Select your role</h2>
+        <h2 className="text-xl font-semibold mb-4 text-white">Select your role</h2>
         <div className="flex gap-4">
-          <button onClick={() => handleRoleSelect("student")} className="px-4 py-2 rounded bg-blue-500 text-white">Student</button>
-          <button onClick={() => handleRoleSelect("company")} className="px-4 py-2 rounded bg-green-500 text-white">Company</button>
-          <button onClick={() => handleRoleSelect("university")} className="px-4 py-2 rounded bg-purple-500 text-white">University</button>
+          <button onClick={() => handleRoleSelect("student")} className="px-4 py-2 rounded bg-[#45cee3] text-white  hover:from-[#39a7b8] hover:to-[#2d8a99] transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl">Student</button>
+          <button onClick={() => handleRoleSelect("company")} className="px-4 py-2 rounded bg-[#45cee3] text-white  hover:from-[#39a7b8] hover:to-[#2d8a99] transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl">Company</button>
+          <button onClick={() => handleRoleSelect("university")} className="px-4 py-2 rounded bg-[#45cee3] text-white  hover:from-[#39a7b8] hover:to-[#2d8a99] transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl">University</button>
         </div>
       </div>
     );
