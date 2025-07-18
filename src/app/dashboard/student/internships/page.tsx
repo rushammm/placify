@@ -106,7 +106,19 @@ export default async function StudentInternshipsPage({ searchParams }: PageProps
         </div>
       </nav>
       <main className="py-16 px-4 sm:px-8 bg-white dark:bg-black min-h-[80vh]">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-5xl mx-auto relative">
+          {/* Back to Dashboard Button - top right, small */}
+          <div className="absolute right-0 top-0 mt-2 mr-2 z-10">
+            <Link
+              href="/dashboard/student"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#45cee3] text-white text-sm font-medium shadow-soft hover:bg-[#39a7b8] focus:outline-none focus:ring-2 focus:ring-[#45cee3] transition-all"
+              prefetch={false}
+              aria-label="Back to Dashboard"
+            >
+              <svg width="16" height="16" fill="none" viewBox="0 0 20 20" aria-hidden="true" className="-ml-1 h-4 w-4"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16l-5-5 5-5"/></svg>
+              Dashboard
+            </Link>
+          </div>
           <div className="mb-10 text-center">
             <h1 className="text-5xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-black to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-4">
               Browse Internships
