@@ -128,6 +128,11 @@ export default async function HomePage() {
     if (user && (!user.role || user.role === "null")) {
       redirect("/onboarding");
     }
+    // Role-based dashboard redirect
+    if (user && user.role === "student") {
+      redirect("/dashboard/student");
+    }
+    // Add more role redirects here as needed
   }
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-black">
