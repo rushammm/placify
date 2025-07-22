@@ -11,15 +11,9 @@ function getUniqueValues<T, K extends keyof T>(array: T[], key: K): T[K][] {
 type Internship = InferModel<typeof internships>;
 type Company = InferModel<typeof companies>;
 
-interface SearchParams {
-  location?: string;
-  jobType?: string;
-  experienceLevel?: string;
-  remoteOnly?: string;
-}
 
 interface PageProps {
-  searchParams?: SearchParams;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
 const jobTypes = [
@@ -41,6 +35,9 @@ import FilterForm from "./FilterForm";
 
 // Use an async function for the page (Next.js 13+)
 export default async function StudentInternshipsPage({ searchParams }: PageProps) {
+  // Await searchParams since it's now a Promise in Next.js 15
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+
   // Fetch all internships with company info
   const internships: Internship[] = await db.query.internships.findMany({
     orderBy: (i, { desc }) => desc(i.createdAt),
@@ -57,31 +54,53 @@ export default async function StudentInternshipsPage({ searchParams }: PageProps
 
   // Convert searchParams to a string-indexed object for FilterForm
   const initialSearchParams: Record<string, string | undefined> = {};
-  if (searchParams) {
-    Object.entries(searchParams).forEach(([key, value]) => {
+  if (resolvedSearchParams) {
+    Object.entries(resolvedSearchParams).forEach(([key, value]) => {
       if (typeof value === "string") initialSearchParams[key] = value;
     });
   }
 
-  // Apply filters from searchParams
+  // Apply filters from resolvedSearchParams
   let filtered: Internship[] = internships;
-  if (searchParams?.location) {
-    filtered = filtered.filter((i: Internship) =>
-      i.location?.toLowerCase().includes(searchParams.location!.toLowerCase())
-    );
+  if (resolvedSearchParams?.location) {
+    const location =
+      typeof resolvedSearchParams.location === "string"
+        ? resolvedSearchParams.location
+        : Array.isArray(resolvedSearchParams.location)
+        ? resolvedSearchParams.location[0]
+        : "";
+    if (location) {
+      filtered = filtered.filter((i: Internship) =>
+        i.location?.toLowerCase().includes(location.toLowerCase())
+      );
+    }
   }
-  if (searchParams?.experienceLevel) {
-    filtered = filtered.filter((i: Internship) =>
-      i.experienceLevel?.toLowerCase() === searchParams.experienceLevel!.toLowerCase()
-    );
+  if (resolvedSearchParams?.experienceLevel) {
+    const experienceLevel =
+      typeof resolvedSearchParams.experienceLevel === "string"
+        ? resolvedSearchParams.experienceLevel
+        : Array.isArray(resolvedSearchParams.experienceLevel)
+        ? resolvedSearchParams.experienceLevel[0]
+        : "";
+    if (experienceLevel) {
+      filtered = filtered.filter((i: Internship) =>
+        i.experienceLevel?.toLowerCase() === experienceLevel.toLowerCase()
+      );
+    }
   }
-  if (searchParams?.jobType) {
-    if (searchParams.jobType === "remote") filtered = filtered.filter((i: Internship) => i.isRemote);
-    else if (searchParams.jobType === "part-time") filtered = filtered.filter((i: Internship) => i.title?.toLowerCase().includes("part-time"));
-    else if (searchParams.jobType === "full-time") filtered = filtered.filter((i: Internship) => i.title?.toLowerCase().includes("full-time"));
-    else if (searchParams.jobType === "internship") filtered = filtered.filter((i: Internship) => i.title?.toLowerCase().includes("intern"));
+  if (resolvedSearchParams?.jobType) {
+    const jobType =
+      typeof resolvedSearchParams.jobType === "string"
+        ? resolvedSearchParams.jobType
+        : Array.isArray(resolvedSearchParams.jobType)
+        ? resolvedSearchParams.jobType[0]
+        : "";
+    if (jobType === "remote") filtered = filtered.filter((i: Internship) => i.isRemote);
+    else if (jobType === "part-time") filtered = filtered.filter((i: Internship) => i.title?.toLowerCase().includes("part-time"));
+    else if (jobType === "full-time") filtered = filtered.filter((i: Internship) => i.title?.toLowerCase().includes("full-time"));
+    else if (jobType === "internship") filtered = filtered.filter((i: Internship) => i.title?.toLowerCase().includes("intern"));
   }
-  if (searchParams?.remoteOnly) {
+  if (resolvedSearchParams?.remoteOnly) {
     filtered = filtered.filter((i: Internship) => i.isRemote);
   }
 
